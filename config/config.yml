@@ -1,0 +1,9 @@
+is_debug: false
+listen:
+  type: port
+  port: 1234
+storage:
+  host: "localhost"
+  port: 5432
+  username: "postgres"
+  database: "postgres"
