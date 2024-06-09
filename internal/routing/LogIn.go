@@ -2,6 +2,7 @@ package routing
 
 import (
 	"UrlShortener/internal/models"
+	"UrlShortener/pkg/utils"
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
@@ -15,6 +16,10 @@ import (
 
 var db *gorm.DB
 
+func LoginTPL(c echo.Context) error {
+	templateFile := "assets/templates/login.html"
+	return utils.ExecuteTemplate(c, templateFile)
+}
 func LogIn(c echo.Context) error {
 	input := new(models.UserData)
 	if err := c.Bind(input); err != nil {

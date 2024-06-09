@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-pic {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 3px solid #007bff;
+        }
+
+        .profile-pic input {
+            margin-top: 10px;
+        }
+
+        .profile-pic button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .profile-pic button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #218838;
+        }
+
+        .bindings, .stats, .password-change {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .bindings {
+            background-color: #e9ecef;
+        }
+
+        .bindings h3, .stats h3, .password-change h3 {
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+
+        .bindings button, .password-change button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .bindings button:hover, .password-change button:hover {
+            background-color: #0056b3;
+        }
+
+        .stats {
+            background-color: #fff3cd;
+        }
+
+        .stats p {
+            margin: 0 0 10px 0;
+        }
+
+        .password-change {
+            background-color: #d1ecf1;
+        }
+
+        .password-change .form-group button {
+            background-color: #17a2b8;
+        }
+
+        .password-change .form-group button:hover {
+            background-color: #117a8b;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="profile-pic">
+        <img src="https://via.placeholder.com/150" alt="Profile Picture" id="profileImage">
+        <input type="file" id="avatarInput">
+        <button id="updateAvatarButton">Обновить аватар</button>
+    </div>
+    <form>
+        <div class="form-group">
+            <label for="displayName">Отображаемое имя</label>
+            <input type="text" id="displayName" name="displayName" value="root">
+        </div>
+        <div class="form-group">
+            <label for="profileTitle">Заголовок профиля</label>
+            <input type="text" id="profileTitle" name="profileTitle">
+        </div>
+        <div class="form-group">
+            <label for="bio">Обо мне</label>
+            <textarea id="bio" name="bio" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email">
+        </div>
+        <div class="form-group">
+            <button type="submit">Сохранить</button>
+        </div>
+    </form>
+    <div class="bindings">
+        <h3>Vk id: Не привязан</h3>
+        <button>Привязать</button>
+    </div>
+    <div class="bindings">
+        <h3>Telegram id: Не привязан</h3>
+        <button>Привязать</button>
+    </div>
+    <div class="stats">
+        <h3>Стата</h3>
+        <p>Всего передрессаций: 0</p>
+        <p>Передрессаций по вашим ссылкам: 0</p>
+        <p>Всего передрессаций за день: 0</p>
+        <p>Передрессаций по вашим ссылкам за день: 0</p>
+    </div>
+    <div class="password-change">
+        <h3>Смена пароля</h3>
+        <div class="form-group">
+            <label for="oldPassword">Старый пароль</label>
+            <input type="password" id="oldPassword" name="oldPassword">
+        </div>
+        <div class="form-group">
+            <label for="newPassword">Новый пароль</label>
+            <input type="password" id="newPassword" name="newPassword">
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Ещё раз</label>
+            <input type="password" id="confirmPassword" name="confirmPassword">
+        </div>
+        <div class="form-group">
+            <button type="submit">Обновить пароль</button>
+        </div>
+    </div>
+</div>
+<script>
+    src = "assets/profile.js"
+</script>
+</body>
+</html>

@@ -2,6 +2,7 @@ package routing
 
 import (
 	"UrlShortener/internal/models"
+	"UrlShortener/pkg/utils"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -13,7 +14,10 @@ import (
 func SetDB(database *gorm.DB) {
 	db = database
 }
-
+func SignUpTPL(c echo.Context) error {
+	Tplname := "assets/templates/signup.html"
+	return utils.ExecuteTemplate(c, Tplname)
+}
 func SignUp(c echo.Context) error {
 
 	input := new(models.UserInput)

@@ -17,23 +17,20 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 }
 
 func InitServer() {
-	// Инициализация базы данных
 	users.InitDB()
 
-	// Создание Echo instance
 	e := echo.New()
 	//e.Use(middleware.Logger())
 	//e.Use(middleware.Recover())
 	//
 	//// Добавление кастомного валидатора
 	e.Validator = &CustomValidator{validator: validator.New()}
-
+	e.GET("/users/signup/", routing.SignUpTPL)
 	e.POST("/users/signup/", routing.SignUp)
-	e.POST("/users/login/", routing.LogIn)
 
+	e.GET("/users/login/", routing.LoginTPL)
+	e.POST("/users/login/", routing.LogIn)
+	e.GET("/users/profile/:id", routing.ProfileTPL)
+	e.POST("/user/update-avatar/", routing.AvatarUpdate)
 	log.Fatal(e.Start(":8080"))
 }
-
-//func getUsersHandler(c echo.Context) error {
-//	return c.String(http.StatusOK, "Get Users Handler")
-//}
