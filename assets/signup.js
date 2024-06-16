@@ -1,19 +1,32 @@
-document.getElementById('signup-form').addEventListener('submit', function() {
-    var formData = new FormData(document.getElementById('signup-form'));
-    var jsonData = {};
-    var birthDate = new Date(formData.get('birth_date')).toISOString();
-    formData.set('birth_date', birthDate);
+$(document).ready(() => {
+    $("#submit-button").click((e) => {
+        e.preventDefault();
 
-    formData.forEach((value, key) => { jsonData[key] = value; });
+        let username = $("#username").val();
+        let password = $("#password").val();
+        let email = $("#email").val();
+        let repeat_password = $("#repeat_password").val();
+        let birth_date = $("#birth_date").val();
 
-    fetch('/users/signup/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(jsonData)
-    })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
+        $.ajax({
+            url: "/users/signup/",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                username: username,
+                password: password,
+                repeat_password: repeat_password,
+                email: email,
+                birth_date: birth_date
+            }),
+            success: (data) => {
+                alert("Registration successful!");
+            },
+            error: (error) => {
+                alert("Error: " + error.responseText);
+            }
+        });
+    });
 });

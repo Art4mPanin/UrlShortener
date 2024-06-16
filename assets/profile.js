@@ -1,27 +1,43 @@
-document.getElementById('updateAvatarButton').addEventListener('click', function() {
-    var fileInput = document.getElementById('avatarInput');
-    var file = fileInput.files[0];
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('DOM fully loaded and parsed');
 
-    if (!file) {
-        alert('Пожалуйста, выберите файл для загрузки.');
-        return;
-    }
+    var updateAvatarButton = document.getElementById('updateAvatarButton');
+    if (updateAvatarButton) {
+        console.log('Button found');
+        updateAvatarButton.addEventListener('click', function () {
+            console.log('Button clicked');
+            var fileInput = document.getElementById('avatarInput');
+            var file = fileInput.files[0];
 
-    var formData = new FormData();
-    formData.append('avatar', file);
-
-    fetch('/user/update-avatar/', {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message === "File uploaded successfully") {
-                document.getElementById('profileImage').src = data.avatar_url;
-                console.log("Avatar URL: ", data.avatar_url);
-            } else {
-                alert('Ошибка при обновлении аватара: ' + data.message);
+            if (!file) {
+                alert('Пожалуйста, выберите файл для загрузки.');
+                console.log('No file selected');
+                return;
             }
-        })
-        .catch(error => console.error('Ошибка:', error));
+
+            var formData = new FormData();
+            formData.append('avatar', file);
+
+            console.log('Preparing to send fetch request');
+            fetch('/user/update-avatar/', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    console.log('Response:', response);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Data:', data);
+                    if (data.message === "File uploaded successfully") {
+                        document.getElementById('profileImage').src = data.avatar_url;
+                    } else {
+                        alert('Ошибка при обновлении аватара: ' + data.message);
+                    }
+                })
+                .catch(error => console.error('Ошибка:', error));
+        });
+    } else {
+        console.log('Button not found');
+    }
 });

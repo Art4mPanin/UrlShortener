@@ -20,6 +20,10 @@ func LoginTPL(c echo.Context) error {
 	templateFile := "assets/templates/login.html"
 	return utils.ExecuteTemplate(c, templateFile)
 }
+func Validate(c echo.Context) error {
+	user := c.Get("user")
+	return c.JSON(http.StatusOK, echo.Map{"message": user})
+}
 func LogIn(c echo.Context) error {
 	input := new(models.UserData)
 	if err := c.Bind(input); err != nil {
@@ -57,5 +61,13 @@ func LogIn(c echo.Context) error {
 		log.Printf("Failed to sign token: %s", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to sign token")
 	}
-	return c.JSON(http.StatusOK, tokenString)
+	c.SetCookie(&http.Cookie{
+		Name:     "Authorization",
+		Value:    tokenString,
+		Path:     "/",
+		Expires:  time.Now().Add(time.Hour * 24 * 30),
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+		Secure:   true})
+	return c.JSON(http.StatusOK, echo.Map{"message": "Login successful"})
 }
