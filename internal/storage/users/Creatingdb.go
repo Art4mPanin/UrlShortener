@@ -3,6 +3,7 @@ package users
 import (
 	"UrlShortener/internal/config"
 	"UrlShortener/internal/models"
+	"UrlShortener/internal/mymiddleware"
 	"UrlShortener/internal/routing"
 	"fmt"
 	"github.com/joho/godotenv"
@@ -50,7 +51,7 @@ func InitDB() {
 	if err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)
 	}
-
+	mymiddleware.InitializeDB(db)
 	// Установка базы данных в пакете routing
 	routing.SetDB(db)
 }

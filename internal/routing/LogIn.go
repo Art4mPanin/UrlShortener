@@ -49,11 +49,15 @@ func LogIn(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, "Incorrect email or password")
 	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": user.ID,
-		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
-	})
+	//token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+	//	"sub": user.ID,
+	//	"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
+	//})
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+	claims["sub"] = user.ID
+	accessTokenExpireTime := time.Now().Add(time.Hour * 24).Unix()
+	claims["exp"] = accessTokenExpireTime
 
 	secret := os.Getenv("JWT_SECRET")
 	tokenString, err := token.SignedString([]byte(secret))
@@ -61,13 +65,7 @@ func LogIn(c echo.Context) error {
 		log.Printf("Failed to sign token: %s", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to sign token")
 	}
-	c.SetCookie(&http.Cookie{
-		Name:     "Authorization",
-		Value:    tokenString,
-		Path:     "/",
-		Expires:  time.Now().Add(time.Hour * 24 * 30),
-		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-		Secure:   true})
-	return c.JSON(http.StatusOK, echo.Map{"message": "Login successful"})
+	return c.JSON(http.StatusOK, echo.Map{
+		"token": tokenString, // Возвращаем токен в ответе
+	})
 }

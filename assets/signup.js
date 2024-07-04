@@ -9,7 +9,7 @@ $(document).ready(() => {
         let birth_date = $("#birth_date").val();
 
         $.ajax({
-            url: "/users/signup/",
+            url: `/users/signup/`,
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <script src="/assets/profile.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="/assets/default.js"></script>
+    <script src="/assets/profile1.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -140,7 +142,7 @@
 <div class="container">
     <div class="profile-pic">
         <img src="https://via.placeholder.com/150" alt="Profile Picture" id="profileImage">
-        <input type="file" id="avatarInput">
+        <input type="file" id="avatarInput" accept="image/*">
         <button id="updateAvatarButton">Обновить аватар</button>
     </div>
     <form>
@@ -161,7 +163,7 @@
             <input type="email" id="email" name="email">
         </div>
         <div class="form-group">
-            <button type="submit">Сохранить</button>
+            <button type="submit" id="changedata">Сохранить</button>
         </div>
     </form>
     <div class="bindings">
@@ -175,9 +177,9 @@
     <div class="stats">
         <h3>Стата</h3>
         <p>Всего передрессаций: 0</p>
-        <p>Передрессаций по вашим ссылкам: 0</п>
-        <p>Всего передрессаций за день: 0</п>
-            <п>Передрессаций по вашим ссылкам за день: 0</п>
+        <p>Передрессаций по вашим ссылкам: 0</p>
+        <p>Всего передрессаций за день: 0</p>
+            <p>Передрессаций по вашим ссылкам за день: 0</p>
     </div>
     <div class="password-change">
         <h3>Смена пароля</h3>
@@ -194,8 +196,11 @@
             <input type="password" id="confirmPassword" name="confirmPassword">
         </div>
         <div class="form-group">
-            <button type="submit">Обновить пароль</button>
+            <button type="submit" id="ConfirmNewPass">Обновить пароль</button>
         </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" id="LogOut">Log out</button>
     </div>
 </div>
 </body>

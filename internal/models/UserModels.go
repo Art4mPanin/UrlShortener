@@ -13,15 +13,17 @@ type User struct {
 	IsActive       bool          `json:"is_active" validate:"required"`
 	IsAdmin        bool          `json:"is_admin" validate:"required"`
 	RegisterDate   time.Time     `json:"register_date" validate:"required"`
-	Profiles       []UserProfile `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Profiles       []UserProfile `gorm:"foreignKey:UserID"`
 }
+
 type UserProfile struct {
-	ID              uint `gorm:"primaryKey"`
-	UserID          uint `gorm:"uniqueIndex"`
-	AvatarURL       string
-	DisplayedName   string
-	ProfileTitle    string
-	Bio             string
+	ID              uint   `gorm:"primaryKey"`
+	UserID          uint   `gorm:"uniqueIndex"`
+	AvatarURL       string `json:"avatar_url"`
+	DisplayedName   string `json:"displayed_name"`
+	ProfileTitle    string `json:"profile_title"`
+	Bio             string `json:"bio"`
+	Email           string `json:"email"`
 	LastVisitDate   time.Time
 	LastIP          string
 	VkId            string
@@ -31,14 +33,21 @@ type UserProfile struct {
 	TotalRedirected int
 	DailyRedirects  int
 	DailyRedirected int
-	User            User `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	User            User `gorm:"foreignKey:UserID;references:ID"`
 }
+
 type UserInput struct {
 	Username       string `json:"username" validate:"required"`
 	Email          string `json:"email" validate:"required,email"`
 	Password       string `json:"password" validate:"required"`
 	RepeatPassword string `json:"repeat_password" validate:"required,eqfield=Password"`
 	BirthDate      string `json:"birth_date" validate:"required"`
+}
+
+type PassConfirmation struct {
+	OldPassword         string `json:"oldpass" validate:"required"`
+	NewPassword         string `json:"newpass" validate:"required"`
+	NewPassConfirmation string `json:"newpassconfirm"validate:"required,eqfield=Password"`
 }
 type UserData struct {
 	Email    string
