@@ -22,3 +22,4 @@ config/.env
 # Go workspace file
 go.work
 
+.idea

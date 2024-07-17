@@ -25,37 +25,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .profile-pic {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-pic img {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border: 3px solid #007bff;
-        }
-
-        .profile-pic input {
-            margin-top: 10px;
-        }
-
-        .profile-pic button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .profile-pic button:hover {
-            background-color: #0056b3;
-        }
-
         .form-group {
             margin-bottom: 20px;
         }
@@ -66,7 +35,7 @@
             font-weight: bold;
         }
 
-        .form-group input, .form-group textarea {
+        .form-group input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -76,72 +45,27 @@
 
         .form-group button {
             padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .form-group button:hover {
-            background-color: #218838;
-        }
-
-        .bindings, .stats, .password-change {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .bindings {
-            background-color: #e9ecef;
-        }
-
-        .bindings h3, .stats h3, .password-change h3 {
-            margin-top: 0;
-            font-size: 1.2em;
-        }
-
-        .bindings button, .password-change button {
-            margin-top: 10px;
-            padding: 10px 20px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-top: 10px;
         }
 
-        .bindings button:hover, .password-change button:hover {
+        .form-group button:hover {
             background-color: #0056b3;
         }
 
-        .stats {
-            background-color: #fff3cd;
-        }
-
-        .stats p {
-            margin: 0 0 10px 0;
-        }
-
-        .password-change {
-            background-color: #d1ecf1;
-        }
-
-        .password-change .form-group button {
-            background-color: #17a2b8;
-        }
-
-        .password-change .form-group button:hover {
-            background-color: #117a8b;
+        h1, h2 {
+            text-align: center;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="profile-pic">
-        <img src="https://via.placeholder.com/150" alt="Profile Picture" id="profileImage">
+        <img src="https://via.placeholder.com/150" alt="Profile Picture" id="profileImage" style="height: 150px; width: 150px;">
         <input type="file" id="avatarInput" accept="image/*">
         <button id="updateAvatarButton">Обновить аватар</button>
     </div>
@@ -166,14 +90,28 @@
             <button type="submit" id="changedata">Сохранить</button>
         </div>
     </form>
-    <div class="bindings">
+    <div class="form-group">
         <h3>Vk id: Не привязан</h3>
-        <button>Привязать</button>
+        <button type="submit" id="link_vk">Привязать</button>
     </div>
-    <div class="bindings">
+    <div class="form-group">
         <h3>Telegram id: Не привязан</h3>
         <button>Привязать</button>
     </div>
+    {{ if .profile.GoogleID }}
+    <div class="form-group">
+        <h3>Google</h3>
+        <p>Google ID: {{ .profile.GoogleID }}</p>
+<!--        todo: unlink cherez frogscript-->
+<!--        <button style="padding: 10px; border: 1px black solid; background: #007bff; color: wheat; border-radius: 5px;">Unlink account</button>-->
+        <button type="submit" id="unlink_google">Unlink google account</button>
+    </div>
+    {{ else }}
+    <h3>Google : Не привязан</h3>
+    <h3>
+        <a href='/auth/google'>Привязать</a>
+    </h3>
+    {{ end }}
     <div class="stats">
         <h3>Стата</h3>
         <p>Всего передрессаций: 0</p>

@@ -4,7 +4,9 @@ $(document).ready(() => {
         console.log("Form submitted"); // Добавьте это сообщение
         let formData = new FormData(document.getElementById('login-form'));
         let jsonData = {};
-        formData.forEach((value, key) => { jsonData[key] = value; });
+        formData.forEach((value, key) => {
+            jsonData[key] = value;
+        });
 
         fetch('/users/login/', {
             method: 'POST',
@@ -22,16 +24,29 @@ $(document).ready(() => {
                 if (data.token) {
                     setCookie("Authorization", data.token, 30);
                     console.log("Token set in cookie:", data.token);
+                    let token = getCookie('Authorization');
+                    let data1 = parseJwt(token)
+                    let user_id = data1.sub
+                    location.href = `/users/profile/${user_id}`
                 } else {
                     console.error("Token not found in response:", data);
                 }
             })
             .catch(error => console.error('Error:', error));
-displayerror()
-        let token = getCookie('Authorization');
-        let data = parseJwt(token)
-        let user_id = data.sub
-        location.href = `/users/profile/${user_id}`
+        DisplayError("Вероятно, вы инвалид")
+
     });
+    $("#password-reset-button").click((e) => {
+        e.preventDefault();
+        location.href = `/users/password-reset/`
+    });
+
+    function DisplayError(errmsg) {
+        let msg = "<div style='border: 1px solid cadetblue; padding: 30px;'></div>"
+        $("#error-message").html(errmsg);
+    }
+
 });
-function displayerror
+
+
+

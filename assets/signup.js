@@ -22,7 +22,9 @@ $(document).ready(() => {
                 birth_date: birth_date
             }),
             success: (data) => {
-                alert("Registration successful!");
+                alert("Data was sent successfully!");
+                setCookie("Verification", email, 1)
+                location.href = `/users/verification/`
             },
             error: (error) => {
                 alert("Error: " + error.responseText);

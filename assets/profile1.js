@@ -18,6 +18,7 @@ $(document).ready(() => {
             $('#profileTitle').val(data.profile_title);
             $('#bio').val(data.bio);
             $('#email').val(data.email);
+            $('#').val(data.google_id);
         },
         error: (jqXHR, textStatus, errorThrown) => {
             console.error('Error:', textStatus, errorThrown);
@@ -104,7 +105,26 @@ $(document).ready(() => {
         });
     })
     $("#LogOut").click((e) => {
-      deleteCookie("Authorization")
-location.href = "/users/login/"
+        deleteCookie("Authorization")
+        location.href = "/users/login/"
     })
+    $("#unlink_google").click((e) =>
+    {
+        e.preventDefault();
+        $.ajax({
+            url: `/users/unlink_google/${user_id}`,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            success: (data) => {
+                alert("Google аккаунт успешно отвязан!");
+                // $("#unlink_google").hide();
+            },
+            error: (error) => {
+                alert("Error: " + error.responseText);
+            }
+        });
+    }
+)
 });

@@ -33,6 +33,8 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 
 func InitServer() {
 	users.InitDB()
+	//routing.Storeconfig()
+
 	e := echo.New()
 
 	e.Use(middleware.Logger())
@@ -44,6 +46,8 @@ func InitServer() {
 
 	e.GET("/users/login/", routing.LoginTPL)
 	e.POST("/users/login/", routing.LogIn)
+	e.GET("/auth/google/login", routing.HandleHomeLogin)
+	e.GET("/auth/google/callback/login", routing.HandleCallbackLogin)
 
 	e.GET("/validate/", routing.Validate, mymiddleware.RequireAuth)
 	e.Static("/assets", "assets")
@@ -57,6 +61,16 @@ func InitServer() {
 	e.PUT("/users/update-avatar/:id", routing.AvatarUpdate, mymiddleware.RequireAuth)
 	e.PUT("/users/update-data/:id", routing.DataUpdate, mymiddleware.RequireAuth)
 	e.PUT("/users/update-password/:id", routing.PassUpdate, mymiddleware.RequireAuth)
+	e.GET("/users/verification/", routing.VerificationTPL)
+	e.POST("/users/verification/", routing.Verification)
+	e.GET("/users/password-reset/", routing.PasswordResetTPL)
+	e.POST("/users/password-reset/", routing.SendCodePass)
+	e.GET("/users/password-reset-new-pass/", routing.PasswordResetSetNewPassTPL)
+	//e.GET("/", routing.Homepage)
+	e.GET("/auth/google", routing.HandleHome)
+	e.GET("/auth/google/callback", routing.HandleCallback, mymiddleware.RequireAuth)
+	e.PUT("/users/unlink_google/:id", routing.GoogleUnlink, mymiddleware.RequireAuth) //
+
 	//e.Depression("/life")
 	log.Fatal(e.Start(":8080"))
 }

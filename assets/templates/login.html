@@ -8,13 +8,20 @@
     <script src="/assets/login1.js"></script>
 </head>
 <body>
-<h1>Authorisation</h1>
+<h1>Authorization</h1>
+<div class="container">
 <form id="login-form">
     <label for="email">Email:</label><br>
     <input type="email" id="email" name="email"><br>
     <label for="password">Password:</label><br>
     <input type="password" id="password" name="password"><br>
     <button id="submit" type="submit">Login</button>
+    <div id="error-message"></div>
+    <button id="password-reset-button" type="submit">Reset password</button>
+    <h3>
+        <a href='/auth/google/login'>Login with Google</a>
+    </h3>
 </form>
+</div>
 </body>
 </html>

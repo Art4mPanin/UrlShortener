@@ -28,7 +28,7 @@ type UserProfile struct {
 	LastIP          string
 	VkId            string
 	TgId            string
-	GoogleID        string
+	GoogleID        string `json:"google_id"`
 	TotalRedirects  int
 	TotalRedirected int
 	DailyRedirects  int
@@ -49,7 +49,30 @@ type PassConfirmation struct {
 	NewPassword         string `json:"newpass" validate:"required"`
 	NewPassConfirmation string `json:"newpassconfirm"validate:"required,eqfield=Password"`
 }
+
 type UserData struct {
 	Email    string
 	Password string
+}
+
+// pizdec
+type Verification struct {
+	ID        uint      `gorm:"primaryKey"`
+	UserEmail string    `json:"email"`
+	Code      string    `json:"code"`
+	Timestamp time.Time `json:"tstmp"`
+}
+
+type VerificationUserInput struct {
+	Email string `json:"email" validate:"required,email"`
+	Code  string `json:"code" validate:"required"`
+}
+type ResetPassVerification struct {
+	Email string `json:"email" validate:"required,email"`
+}
+type ResetPassInput struct {
+	Email             string `json:"email" validate:"required,email"`
+	Code              string `json:"code" validate:"required"`
+	NewPassword       string `json:"newpass" validate:"required"`
+	NewPasswordRepeat string `json:"newpassrep" validate:"required, eqfield=NewPassword"`
 }

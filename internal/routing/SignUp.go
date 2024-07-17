@@ -40,7 +40,7 @@ func SignUp(c echo.Context) error {
 		Email:          input.Email,
 		HashedPassword: string(hashedPassword),
 		BirthDate:      input.BirthDate,
-		IsActive:       true,
+		IsActive:       false,
 		IsAdmin:        false,
 		RegisterDate:   time.Now(),
 	}
@@ -52,6 +52,17 @@ func SignUp(c echo.Context) error {
 	} else {
 		log.Printf("User successfully inserted with ID: %d", user.ID)
 	}
-
+	code, tstmp := utils.VerificationCode(input.Email)
+	Verif := models.Verification{
+		UserEmail: input.Email,
+		Code:      code,
+		Timestamp: tstmp,
+	}
+	//no vibes
+	result1 := db.Create(&Verif)
+	if result1.Error != nil {
+		log.Printf("Failed to insert verification: %s", result1.Error)
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to insert verification")
+	}
 	return c.JSON(http.StatusCreated, user)
 }

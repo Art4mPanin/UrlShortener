@@ -7,3 +7,7 @@ storage:
   port: 5432
   username: "postgres"
   database: "postgres"
+verification:
+  email_sender: "urlshortenercode@gmail.com"
+  email_server_username: "urlshortenercode@gmail.com"
+  email_server_password: "lgin dlop oujh vakg"
