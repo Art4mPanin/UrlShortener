@@ -36,7 +36,7 @@ func Verification(c echo.Context) error {
 		})
 	}
 	if input.Code != verification.Code {
-		log.Printf("Incorrect code: got %d, expected %d", input.Code, verification.Code)
+		log.Printf("Incorrect code: got %s, expected %s", input.Code, verification.Code)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"success": false,
 			"message": "Code has expired. A new code has been sent to your email.",

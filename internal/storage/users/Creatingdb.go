@@ -47,7 +47,7 @@ func InitDB() {
 	}
 
 	// Автоматическая миграция для создания таблиц
-	err = db.AutoMigrate(&models.User{}, &models.UserProfile{}, &models.Verification{})
+	err = db.AutoMigrate(&models.User{}, &models.UserProfile{}, &models.Verification{}, &models.LinkDB{}, &models.IPLINK{})
 	if err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)
 	}

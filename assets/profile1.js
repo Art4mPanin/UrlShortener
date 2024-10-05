@@ -7,10 +7,11 @@ $(document).ready(() => {
     let user_id = data.sub
     console.log(user_id)
     $.ajax({
-        url: `/api/users/profile/${userID}`,
+        url: `/api/users/profile/${user_id}`,
         method: 'GET',
         dataType: 'json',
         success: (data) => {
+            console.log(data);
             if (data.avatar_url) {
                 $('#profileImage').attr('src', data.avatar_url);
             }
@@ -19,6 +20,10 @@ $(document).ready(() => {
             $('#bio').val(data.bio);
             $('#email').val(data.email);
             $('#').val(data.google_id);
+            $('#TotalRedirects').text(data.total_redirects);
+            $('#TotalRedirected').text(data.total_redirected);
+            $('#DailyRedirects').text(data.daily_redirects);
+            $('#DailyRedirected').text(data.daily_redirected);
         },
         error: (jqXHR, textStatus, errorThrown) => {
             console.error('Error:', textStatus, errorThrown);
@@ -108,23 +113,66 @@ $(document).ready(() => {
         deleteCookie("Authorization")
         location.href = "/users/login/"
     })
-    $("#unlink_google").click((e) =>
-    {
-        e.preventDefault();
+    $("#unlink_google").click((e) => {
+            e.preventDefault();
+            $.ajax({
+                url: `/users/unlink_google/${user_id}`,
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                success: (data) => {
+                    alert("Google аккаунт успешно отвязан!");
+                    // $("#unlink_google").hide();
+                },
+                error: (error) => {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        }
+    )
+
+
+    $("#unlink_vk").click((e) => {
+            e.preventDefault();
+            $.ajax({
+                url: `/users/unlink_vk/${user_id}`,
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                success: (data) => {
+                    alert("Google аккаунт успешно отвязан!");
+                    // $("#unlink_google").hide();
+                },
+                error: (error) => {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        }
+    )
+$("#shortenButton").click((e) => {
+    e.preventDefault()
+    window.location.href= `/api/url_shorten/`
+})
+    $("#unlinkTelegramButton").click((e) => {
         $.ajax({
-            url: `/users/unlink_google/${user_id}`,
-            method: "PUT",
+            url: "/users/tg_unlink",
+            method: "DELETE",
             headers: {
+                "Authorization": "Bearer " + token,
                 "Content-Type": "application/json"
             },
-            success: (data) => {
-                alert("Google аккаунт успешно отвязан!");
-                // $("#unlink_google").hide();
+            success: function(response) {
+                alert(response.message);
+                // Обновляем интерфейс пользователя после отвязки
+                document.getElementById("telegramInfo").innerText = "Telegram: Not Linked";
             },
-            error: (error) => {
-                alert("Error: " + error.responseText);
+            error: function(xhr, status, error) {
+                console.error("Error unlinking Telegram:", error);
+                alert("An error occurred while unlinking Telegram. Please try again.");
             }
         });
-    }
-)
+    });
+
 });

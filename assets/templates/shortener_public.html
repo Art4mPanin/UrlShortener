@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shortener public</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: inline-block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 30%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .form-group button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+
+        .checkbox-group {
+            margin-bottom: 1px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-left: 1px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .short-link button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 16px;
+        }
+
+        .short-link button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            $('#Shorten').click(function(event) {
+                event.preventDefault();
+
+                let link = $("#Link").val();
+                let duration = $("#duration").val();
+
+                $.ajax({
+                    url: "/api/shorten_public",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        longLink: link,
+                        expiresAt: duration,
+                    }),
+                    success: function(response) {
+                        let shortenedLink = response.shortenedLink;
+                        $('#shortLink').html(`Your shortened link: <a href="${shortenedLink}" target="_blank">${shortenedLink}</a>`);
+                        $('#shortLinkCopy').html(`<a href="${shortenedLink}" target="_blank">${shortenedLink}</a>`);
+                        $('#shortLinkContainer').show();
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(link, duration);
+                        console.error("Ошибка при создании короткой ссылки:", error);
+                    }
+                });
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <form>
+        <div class="form-group">
+            <label for="Link">Enter your link</label>
+            <input type="text" id="Link" name="Link">
+        </div>
+        <div class="form-group">
+            <label for="duration">Действительна:</label>
+            <select id="duration" name="duration">
+                <option value="always">Всегда</option>
+                <option value="1day">1 День</option>
+                <option value="7days">7 Дней</option>
+                <option value="30days">30 Дней</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" id="Shorten">Shorten the link</button>
+        </div>
+    </form>
+    <div id="shortLinkContainer" class="short-link" style="display:none;">
+        <p id="shortLink"></p>
+    </div>
+</div>
+</body>
+</html>

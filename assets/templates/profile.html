@@ -90,35 +90,119 @@
             <button type="submit" id="changedata">Сохранить</button>
         </div>
     </form>
+<!--    <div class="form-group">-->
+<!--        <h3>Vk id: Не привязан</h3>-->
+<!--        <button type="submit" id="link_vk">Привязать</button>-->
+<!--    </div>-->
+
+
+    {{ if .profile.VkId }}
     <div class="form-group">
-        <h3>Vk id: Не привязан</h3>
-        <button type="submit" id="link_vk">Привязать</button>
+        <h3>VK</h3>
+        <p>VK ID: {{ .profile.VkId }}</p>
+        <!--        todo: unlink cherez frogscript-->
+        <!--        <button style="padding: 10px; border: 1px black solid; background: #007bff; color: wheat; border-radius: 5px;">Unlink account</button>-->
+        <button type="submit" id="unlink_vk">Unlink vk account</button>
     </div>
+    {{ else }}
+    <h3>VK : Не привязан</h3>
+    <h3>
+        <a href='/auth/vk/'>Привязать</a>
+    </h3>
+    {{ end }}
+
+
+<!--    <div class="form-group">-->
+<!--        <h3>Telegram id: Не привязан</h3>-->
+    <script type="text/javascript">
+        function onTelegramAuth(user) {
+            // Выводим все данные, которые передает Telegram
+            console.log(user);
+            var userInfo = 'Logged in as ' + user.first_name;
+            if (user.last_name) {
+                userInfo += ' ' + user.last_name;
+            }
+            userInfo += ' (' + user.id;
+            if (user.username) {
+                userInfo += ', @' + user.username;
+            }
+            userInfo += ')';
+            // Проверяем, что `user.id` существует и не пустой
+            if (!user.id) {
+                alert("Ошибка: Telegram ID отсутствует.");
+                return;
+            }
+
+            // Получаем токен из куков и парсим его
+            let token = getCookie('Authorization');
+            let data = parseJwt(token)
+            console.log(data)
+            let user_id = data.sub
+            $.ajax({
+                url: `/users/tg_link/`,
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({
+                    Tg_ID: user.id,
+                    firstname:user.first_name,
+                    lastname: user.last_name,
+                    username: user.username,
+                    photo_url: user.photo_url,
+                    auth_date: user.auth_date,
+                    hash: user.hash
+                }),
+                success: (data) => {
+                    console.log("Telegram ID:", user.id);
+                },
+                error: (error) => {
+                    alert("Error: " + error.responseText);
+                }
+            });
+
+            alert("Telegram was successfully linked!");
+        }
+    </script>
+    <!--        <button>Привязать</button>-->
+    <!--    </div>-->
+    <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="CompressLinkBot" data-size="medium" data-auth-url="https://cc12-91-249-85-235.ngrok-free.app/auth/tg/"></script>
+    <button type="button" id="unlinkTelegramButton">Unlink Telegram</button>
     <div class="form-group">
-        <h3>Telegram id: Не привязан</h3>
-        <button>Привязать</button>
-    </div>
     {{ if .profile.GoogleID }}
     <div class="form-group">
         <h3>Google</h3>
         <p>Google ID: {{ .profile.GoogleID }}</p>
-<!--        todo: unlink cherez frogscript-->
-<!--        <button style="padding: 10px; border: 1px black solid; background: #007bff; color: wheat; border-radius: 5px;">Unlink account</button>-->
         <button type="submit" id="unlink_google">Unlink google account</button>
     </div>
     {{ else }}
-    <h3>Google : Не привязан</h3>
-    <h3>
-        <a href='/auth/google'>Привязать</a>
-    </h3>
-    {{ end }}
-    <div class="stats">
-        <h3>Стата</h3>
-        <p>Всего передрессаций: 0</p>
-        <p>Передрессаций по вашим ссылкам: 0</p>
-        <p>Всего передрессаций за день: 0</p>
-            <p>Передрессаций по вашим ссылкам за день: 0</p>
+    <div class="form-group">
+        <h3>Google: Не привязан</h3>
+        <h3>
+            <a href='/auth/google'>Привязать</a>
+        </h3>
     </div>
+    {{ end }}
+    <div class="form-group">
+        <label>Shorten URL</label>
+        <button type="button" id="shortenButton">Сократить</button>
+    </div>
+        <div class="form-group">
+            <label for="TotalRedirects">Всего переадрессаций:{{ .profile.TotalRedirects }}</label>
+            <span id="TotalRedirects"></span>
+        </div>
+        <div class="form-group">
+            <label for="TotalRedirected">Переадрессаций по вашим ссылкам:{{ .profile.TotalRedirected }}</label>
+            <span id="TotalRedirected"></span>
+        </div>
+        <div class="form-group">
+            <label for="DailyRedirects">Всего переадрессаций за день:{{ .profile.DailyRedirects }}</label>
+            <span id="DailyRedirects"></span>
+        </div>
+        <div class="form-group">
+            <label for="DailyRedirected">Переадрессаций по вашим ссылкам за день:{{ .profile.DailyRedirected }}</label>
+            <span id="DailyRedirected"></span>
+        </div>
     <div class="password-change">
         <h3>Смена пароля</h3>
         <div class="form-group">
@@ -140,6 +224,7 @@
     <div class="form-group">
         <button type="submit" id="LogOut">Log out</button>
     </div>
+</div>
 </div>
 </body>
 </html>

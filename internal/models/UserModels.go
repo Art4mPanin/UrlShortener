@@ -26,14 +26,14 @@ type UserProfile struct {
 	Email           string `json:"email"`
 	LastVisitDate   time.Time
 	LastIP          string
-	VkId            string
+	VkId            string `json:"vk_id"`
 	TgId            string
 	GoogleID        string `json:"google_id"`
-	TotalRedirects  int
-	TotalRedirected int
-	DailyRedirects  int
-	DailyRedirected int
-	User            User `gorm:"foreignKey:UserID;references:ID"`
+	TotalRedirects  int    `json:"total_redirects"`
+	TotalRedirected int    `json:"total_redirected"`
+	DailyRedirects  int    `json:"daily_redirects"`
+	DailyRedirected int    `json:"daily_redirected"`
+	User            User   `gorm:"foreignKey:UserID;references:ID"`
 }
 
 type UserInput struct {
@@ -75,4 +75,44 @@ type ResetPassInput struct {
 	Code              string `json:"code" validate:"required"`
 	NewPassword       string `json:"newpass" validate:"required"`
 	NewPasswordRepeat string `json:"newpassrep" validate:"required, eqfield=NewPassword"`
+}
+type TgVerification struct {
+	AuthDate  int    `json:"auth_date"`
+	FirstName string `json:"firstname"`
+	TgID      int    `json:"Tg_ID"`
+	LastName  string `json:"lastname"`
+	Username  string `json:"username"`
+	PhotoUrl  string `json:"photo_url"`
+	Hash      string `json:"hash"`
+}
+type LinkInput struct {
+	Link               string `json:"link"`
+	Duration           string `json:"duration"`
+	TimeBeforeRedirect string `json:"timeBeforeRedirect"`
+	MaxRedirects       int    `json:"maxRedirects"`
+	UniqCounter        bool   `json:"uniqRedirects"`
+	Availability       bool   `json:"availability"`
+}
+type LinkDB struct {
+	ID                 uint `gorm:"primaryKey"`
+	UserID             uint `gorm:"foreignKey:UserID"`
+	LongLink           string
+	ShortLink          string
+	ExpiresAt          time.Time
+	TimeBeforeRedirect int
+	MaxRedirects       int
+	UniqCounter        bool
+	Availability       bool
+	IPLINKs            []IPLINK `gorm:"foreignKey:LinkID"`
+}
+type IPLINK struct {
+	ID     uint `gorm:"primaryKey"`
+	IP     string
+	LinkID uint
+	Link   LinkDB `gorm:"constraint:OnUpdate;OnDelete:CASCADE;"`
+}
+type LinkDBPublic struct {
+	ID        uint   `gorm:"primaryKey"`
+	LongLink  string `json:"longLink"`
+	ExpiresAt string `json:"expiresAt"`
 }

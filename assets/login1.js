@@ -45,7 +45,10 @@ $(document).ready(() => {
         let msg = "<div style='border: 1px solid cadetblue; padding: 30px;'></div>"
         $("#error-message").html(errmsg);
     }
-
+    $("#shortenButtonPublic").click((e) => {
+        e.preventDefault()
+        window.location.href= `/api/url_shorten_public/`
+    })
 });
 
 

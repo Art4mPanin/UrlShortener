@@ -2,6 +2,7 @@ package mymiddleware
 
 import (
 	"UrlShortener/internal/models"
+	"UrlShortener/pkg/logger"
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
@@ -21,7 +22,10 @@ func InitializeDB(database *gorm.DB) {
 
 func RequireAuth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		logger.FastTrace("debug", "Received auth on url %v", c.Request().URL.String())
 		cookie, err := c.Cookie("Authorization")
+		logger.FastTrace("debug", "Auth in cookie: %v", cookie)
+
 		if err != nil {
 			return echo.NewHTTPError(http.StatusUnauthorized, "Missing or invalid cookie")
 		}
@@ -95,7 +99,7 @@ func UpdateTimeIp(next echo.HandlerFunc) echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusNotFound, "User profile not found")
 		}
 		userProfile.LastVisitDate = time.Now()
-		userProfile.LastIP = getRealIP(c)
+		userProfile.LastIP = GetRealIP(c)
 
 		if err := db.Save(&userProfile).Error; err != nil {
 			log.Printf("Failed to update user profile: %s", err)
@@ -109,7 +113,7 @@ func UpdateTimeIp(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 
 }
-func getRealIP(c echo.Context) string {
+func GetRealIP(c echo.Context) string {
 	realIP := c.Request().Header.Get("X-Real-IP")
 	if realIP == "" {
 		realIP = c.Request().Header.Get("X-Forwarded-For")

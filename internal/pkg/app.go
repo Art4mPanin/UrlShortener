@@ -11,6 +11,8 @@ import (
 	"html/template"
 	"io"
 	"log"
+	"net/http"
+	"os"
 )
 
 type CustomValidator struct {
@@ -34,6 +36,16 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 func InitServer() {
 	users.InitDB()
 	//routing.Storeconfig()
+	newEnv := env.NewEnv(&config.EnvRoot)
+	baseConfig := config.NewBaseConfig(newEnv)
+	logger.InitLoggers(baseConfig)
+
+	handler := singleton.InitializeSingletonHandler()
+	handler.RegisterSingleton("google_data_profile", GetGoogleDataProfile())
+	handler.RegisterSingleton("vk_data_profile", GetVKDataProfile())
+	handler.RegisterSingleton("google_data_login", GetGoogleDataLogin())
+	handler.RegisterSingleton("vk_data_login", GetVKDataLogin())
+	handler.RegisterSingleton("global_db", database)
 
 	e := echo.New()
 
@@ -48,6 +60,9 @@ func InitServer() {
 	e.POST("/users/login/", routing.LogIn)
 	e.GET("/auth/google/login", routing.HandleHomeLogin)
 	e.GET("/auth/google/callback/login", routing.HandleCallbackLogin)
+	e.GET("/auth/vk/login", routing.HandleHomeVKLogin)
+	e.GET("/auth/vk/callback/login", routing.HandleCallbackVKLogin)
+	e.POST("/users/tg_link/login", routing.TGLogin)
 
 	e.GET("/validate/", routing.Validate, mymiddleware.RequireAuth)
 	e.Static("/assets", "assets")
@@ -66,11 +81,28 @@ func InitServer() {
 	e.GET("/users/password-reset/", routing.PasswordResetTPL)
 	e.POST("/users/password-reset/", routing.SendCodePass)
 	e.GET("/users/password-reset-new-pass/", routing.PasswordResetSetNewPassTPL)
-	//e.GET("/", routing.Homepage)
 	e.GET("/auth/google", routing.HandleHome)
 	e.GET("/auth/google/callback", routing.HandleCallback, mymiddleware.RequireAuth)
 	e.PUT("/users/unlink_google/:id", routing.GoogleUnlink, mymiddleware.RequireAuth) //
+	e.GET("/auth/vk/", routing.HandleHomeVK)
+	e.GET("/auth/vk/callback", routing.HandleCallbackVK, mymiddleware.RequireAuth)
+	e.PUT("/users/unlink_vk/:id", routing.VKUnlink, mymiddleware.RequireAuth)
+	e.PUT("/users/tg_link/", routing.TGLINK, mymiddleware.RequireAuth)
+	e.DELETE("/users/tg_unlink", routing.TgUnlink, mymiddleware.RequireAuth)
 
+	e.GET("/api/url_shorten/", func(c echo.Context) error {
+		return c.Render(http.StatusOK, "shortener.html", nil)
+	})
+	e.POST("/api/shorten", routing.Shortener, mymiddleware.RequireAuth)
+	e.GET("/s/:shortLink", routing.ShortLinkHandler, mymiddleware.RequireAuth)
+	e.GET("/redirect/:shortLink", routing.RedirectPage, mymiddleware.RequireAuth)
+
+	e.GET("/api/url_shorten_public/", func(c echo.Context) error {
+		return c.Render(http.StatusOK, "shortener_public.html", nil)
+	})
+	e.POST("/api/shorten_public", routing.ShortenerPublic)
+	e.GET("/s/:shortLink", routing.ShortLinkPublicHandler)
+	e.GET("/redirect/:shortLink", routing.RedirectPage)
 	//e.Depression("/life")
 	log.Fatal(e.Start(":8080"))
 }
